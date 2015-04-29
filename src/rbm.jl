@@ -120,7 +120,7 @@ function sample_visibles(rbm::GRBM, hid::Mat{Float64})
     """Same as sample visibles for the BernoulliRBM,
        but using the Gaussian function rather than the 
        logistic function"""
-    mu = logistic(gemv("T", 1, rbm.W, hid .+ rbm.vbias)
+    mu = logistic(gemv("T", 1, rbm.W, hid .+ rbm.vbias))
     sigma2 = 0.01                   # using fixed standard diviation
     samples = zeros(size(mu))
     for j=1:size(mu, 2), i=1:size(mu, 1)
