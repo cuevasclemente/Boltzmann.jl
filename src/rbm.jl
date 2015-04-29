@@ -110,7 +110,7 @@ function sample_visibles(rbm::BernoulliRBM, hid::Mat{Float64})
     activate. Essentially the same as `sample_hiddens` except 
     now we're finding the probabilities that a visible unit 
     would go off for a given hidden matrix"""
-    p = BLAS.gemn('T', 1.0, rbm.W, hid) .+ rbm.vbias
+    p = BLAS.gemm('T', 'T', 1.0, rbm.W, hid) .+ rbm.vbias
     p = logistic(p)
     return float(rand(size(p)) .< p)
 end
