@@ -91,7 +91,7 @@ function mean_hiddens(rbm::RBM, vis::Mat{Float64})
   and return the probabiltiies of the hidden units turning on.
   Note that we are adding the hidden bias unit to the visisble 
   units"""
-    p = gemv("N", 1, rbm.W, vis .+ rbm.hbias) 
+    p = gemv("N", 1, rbm.W, vis) .+ rbm.hbias
     return logistic(p)
 end
 
@@ -110,7 +110,7 @@ function sample_visibles(rbm::BernoulliRBM, hid::Mat{Float64})
     activate. Essentially the same as `sample_hiddens` except 
     now we're finding the probabilities that a visible unit 
     would go off for a given hidden matrix"""
-    p = gemv("T", 1, rbm.W, hid .+ rbm.vbias) 
+    p = gemv("T", 1, rbm.W, hid) .+ rbm.vbias
     p = logistic(p)
     return float(rand(size(p)) .< p)
 end
@@ -120,7 +120,7 @@ function sample_visibles(rbm::GRBM, hid::Mat{Float64})
     """Same as sample visibles for the BernoulliRBM,
        but using the Gaussian function rather than the 
        logistic function"""
-    mu = logistic(gemv("T", 1, rbm.W, hid .+ rbm.vbias))
+    mu = logistic(gemv("T", 1, rbm.W, hid) .+ rbm.vbias)
     sigma2 = 0.01                   # using fixed standard diviation
     samples = zeros(size(mu))
     for j=1:size(mu, 2), i=1:size(mu, 1)
