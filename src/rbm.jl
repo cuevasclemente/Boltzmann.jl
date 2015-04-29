@@ -91,7 +91,7 @@ function mean_hiddens(rbm::RBM, vis::Mat{Float64})
   and return the probabiltiies of the hidden units turning on.
   Note that we are adding the hidden bias unit to the visisble 
   units"""
-    p = BLAS.gemm('N', 1.0, rbm.W, vis) .+ rbm.hbias
+    p = BLAS.gemm('N', 'N', 1.0, rbm.W, vis) .+ rbm.hbias
     return logistic(p)
 end
 
@@ -120,7 +120,7 @@ function sample_visibles(rbm::GRBM, hid::Mat{Float64})
     """Same as sample visibles for the BernoulliRBM,
        but using the Gaussian function rather than the 
        logistic function"""
-    mu = logistic(BLAS.gemm('T', 1.0, rbm.W, hid) .+ rbm.vbias)
+    mu = logistic(BLAS.gemm('N', 'N', 1.0, rbm.W, hid) .+ rbm.vbias)
     sigma2 = 0.01                   # using fixed standard diviation
     samples = zeros(size(mu))
     for j=1:size(mu, 2), i=1:size(mu, 1)
